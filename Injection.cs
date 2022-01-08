@@ -4,11 +4,13 @@ using PizzaAPI.Config;
 using PizzaAPI.Models;
 using PizzaAPI.Services;
 
-/// Class, that responsoblie for setting
-/// up and registering all services.
 public class Injection {
-    /// Main method for registration.
-    public static void Init(IServiceCollection Collection, IConfiguration Configuration) {
+
+    public static void Init(IServiceCollection Collection) {
+        var Configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
+            .Build();
 
         var mongoDBOptions = new MongoDBOptions();
 
