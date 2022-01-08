@@ -41,3 +41,5 @@ E:\Projects\.NETProjects\PizzaAPI\obj\Debug\net6.0\PizzaAPI.dll
 E:\Projects\.NETProjects\PizzaAPI\obj\Debug\net6.0\ref\PizzaAPI.dll
 E:\Projects\.NETProjects\PizzaAPI\obj\Debug\net6.0\PizzaAPI.pdb
 E:\Projects\.NETProjects\PizzaAPI\obj\Debug\net6.0\PizzaAPI.genruntimeconfig.cache
+E:\Projects\.NETProjects\PizzaAPI\bin\Debug\net6.0\PizzaAPI.xml
+E:\Projects\.NETProjects\PizzaAPI\obj\Debug\net6.0\PizzaAPI.xml
