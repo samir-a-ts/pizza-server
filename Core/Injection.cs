@@ -13,8 +13,6 @@ public class Injection {
 
         var builder = new MongoDB.Driver.MongoUrlBuilder(mongoDBOptions.Url);
 
-        Console.WriteLine(mongoDBOptions.Url);
-
         var client = new MongoDB.Driver.MongoClient(builder.ToMongoUrl());
 
         var database = client.GetDatabase(mongoDBOptions.DatabaseName);

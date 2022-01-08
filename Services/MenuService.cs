@@ -1,38 +1,51 @@
 namespace PizzaAPI.Services;
 
+using MongoDB.Driver;
+
 using PizzaAPI.Models;
 
-public class MenuService {
-    private readonly MongoDB.Driver.IMongoCollection<Pizza> PizzaCollection;
-    
-    private readonly MongoDB.Driver.IMongoCollection<Combo> ComboCollection;
+public class MenuService
+{
+    private readonly IMongoCollection<Pizza> PizzaCollection;
 
-    public MenuService(MongoDB.Driver.IMongoCollection<Pizza> pizzaCollection, MongoDB.Driver.IMongoCollection<Combo> comboCollection) {
+    private readonly IMongoCollection<Combo> ComboCollection;
+
+    public MenuService(IMongoCollection<Pizza> pizzaCollection, IMongoCollection<Combo> comboCollection)
+    {
         PizzaCollection = pizzaCollection;
         ComboCollection = comboCollection;
     }
 
-    public async Task<IEnumerable<MenuItem>> GetList() {
-        var result = new List<MenuItem>();
+    public async Task<IEnumerable<Combo>> GetCombosList() {
+        var result = new List<Combo>();
 
-        var pizzasRequest = PizzaCollection.FindAsync<Pizza>(
-            MongoDB.Driver.FilterDefinition<Pizza>.Empty
+        var combos = await ComboCollection.FindAsync<Combo>(
+            FilterDefinition<Combo>.Empty
         );
 
-        var comboRequest = ComboCollection.FindAsync<Combo>(
-            MongoDB.Driver.FilterDefinition<Combo>.Empty
+        var combosList = combos.ToList();
+
+        Console.WriteLine(combosList);
+
+        result = result.Concat(combosList ?? new List<Combo>()).ToList();
+
+        return result;
+    }
+
+    public async Task<IEnumerable<Pizza>> GetPizzaList()
+    {
+        var result = new List<Pizza>();
+
+        var pizzas = await PizzaCollection.FindAsync<Pizza>(
+            FilterDefinition<Pizza>.Empty
         );
 
-        var pizzas = await pizzasRequest;
+        var pizzaList = pizzas.ToList();
 
-        var combos = await comboRequest;
+        Console.WriteLine(pizzaList);
 
-        result = result.Concat(
-            pizzas.Current ?? new List<Pizza>()
-            ).Concat(
-                combos.Current ?? new List<Combo>()
-        ).ToList();
-        
+        result = result.Concat(pizzaList ?? new List<Pizza>()).ToList();
+
         return result;
     }
 }
