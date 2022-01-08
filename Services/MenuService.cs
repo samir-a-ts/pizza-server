@@ -48,4 +48,31 @@ public class MenuService
 
         return result;
     }
+
+    public async Task<Pizza?> GetPizzaFromId(int id)
+    {
+        var pizzaFilter = await PizzaCollection.FindAsync<Pizza>(
+            new BsonDocumentFilterDefinition<Pizza>(
+                new MongoDB.Bson.BsonDocument(
+                    "ItemId", id
+                )
+            )
+        );
+
+        return pizzaFilter.FirstOrDefault();
+    }
+
+    public async Task<Combo?> GetComboFromId(int id)
+    {
+        var comboFilter = await ComboCollection.FindAsync<Combo>(
+            new BsonDocumentFilterDefinition<Combo>(
+                new MongoDB.Bson.BsonDocument(
+                    "ItemId", id
+                )
+            )
+        );
+
+
+        return comboFilter.FirstOrDefault();
+    }
 }
