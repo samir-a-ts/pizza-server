@@ -2,13 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 
 using PizzaAPI.Services;
 
+using PizzaAPI.Models;
+namespace PizzaAPI.Controllers;
+
 [ApiController]
 [Route("[controller]")]
-public class MenuController {
+public class MenuController : ControllerBase {
     
-    [HttpGet("check")]
-    bool check([FromServices] MenuService service) {
-        return service == null;
+    [HttpGet]
+    async Task<List<MenuItem>> Get([FromServices] MenuService service) {
+        var result = await service.GetList();
+
+        return result;
     }
 
 }
