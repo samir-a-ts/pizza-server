@@ -6,11 +6,13 @@ using PizzaAPI.Models;
 namespace PizzaAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("menu")]
 public class MenuController : ControllerBase {
+
+    public MenuController() {}
     
     [HttpGet]
-    async Task<List<MenuItem>> Get([FromServices] MenuService service) {
+    public async Task<IEnumerable<MenuItem>> Get([FromServices] MenuService service) {
         var result = await service.GetList();
 
         return result;
