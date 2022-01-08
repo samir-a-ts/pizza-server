@@ -6,12 +6,7 @@ using PizzaAPI.Services;
 
 public class Injection {
 
-    public static void Init(IServiceCollection Collection) {
-        var Configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-            .AddEnvironmentVariables()
-            .Build();
-
+    public static void Init(IServiceCollection Collection, IConfiguration Configuration) {
         var mongoDBOptions = new MongoDBOptions();
 
         ConfigurationBinder.Bind(Configuration, MongoDBOptions.Position, mongoDBOptions);
