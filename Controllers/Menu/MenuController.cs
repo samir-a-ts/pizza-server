@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using PizzaAPI.Services;
 
-using PizzaAPI.Models;
 namespace PizzaAPI.Controllers;
 
 [ApiController]
