@@ -1,5 +1,6 @@
 namespace PizzaAPI.Injection;
 
+
 using PizzaAPI.Config;
 using PizzaAPI.Models;
 using PizzaAPI.Services;
@@ -24,5 +25,9 @@ public class Injection {
         Collection.AddSingleton<MenuService>(
             new MenuService(pizzaMenuCollection, comboMenuCollection)
         );
+
+        var jwtSecret = Configuration["Jwt:Secret"];
+
+        Console.WriteLine(jwtSecret);
     }
 }
