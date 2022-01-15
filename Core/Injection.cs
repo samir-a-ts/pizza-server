@@ -4,6 +4,11 @@ namespace PizzaAPI.Injection;
 using PizzaAPI.Config;
 using PizzaAPI.Models;
 using PizzaAPI.Services;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 public class Injection {
 
@@ -28,6 +33,51 @@ public class Injection {
 
         var jwtSecret = Configuration["Jwt:Secret"];
 
-        Console.WriteLine(jwtSecret);
+        var jwtOptions = new JwtOptions();
+
+        ConfigurationBinder.Bind(Configuration, JwtOptions.Position, jwtOptions);
+
+        var signingKey = new RsaSecurityKey(
+            new RSAParameters {
+            }
+        );
+
+        Collection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(
+                options => {
+                    options.TokenValidationParameters = new TokenValidationParameters {
+                        // укзывает, будет ли валидироваться издатель при валидации токена
+                            ValidateIssuer = true,
+                            // строка, представляющая издателя
+                            ValidIssuer = jwtOptions.Issuer,
+ 
+                            // будет ли валидироваться потребитель токена
+                            ValidateAudience = true,
+                            // установка потребителя токена
+                            ValidAudience = jwtOptions.Audience,
+                            // будет ли валидироваться время существования
+                            ValidateLifetime = true,
+ 
+                            // установка ключа безопасности
+                            IssuerSigningKey = signingKey,
+                            // валидация ключа безопасности
+                            ValidateIssuerSigningKey = true
+                    };
+                }
+            );
+
+        Collection.AddSingleton<JwtService>(
+            new JwtService(
+                new JwtHeader(
+                    new SigningCredentials(
+                        signingKey,
+                        "RSASHA256"
+                    )
+                )
+            )
+        );
+
+        Collection.AddControllersWithViews();
+
     }
 }

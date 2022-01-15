@@ -2,21 +2,19 @@ using PizzaAPI.Injection;
 
 using Microsoft.Extensions.FileProviders;
 
-using Microsoft.Extensions.Configuration.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Injection.Init(builder.Services, builder.Configuration);
-
-// Add services to the container.
-
-builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseAuthentication();
 
 app.UseStaticFiles(
     new StaticFileOptions {

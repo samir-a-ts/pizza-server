@@ -4,7 +4,7 @@ using PizzaAPI.Services;
 namespace PizzaAPI.Controllers;
 
 [ApiController]
-[Route("menu")]
+[Route("[controller]")]
 public class MenuController : ControllerBase {
 
     [HttpGet]
