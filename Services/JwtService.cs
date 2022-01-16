@@ -13,10 +13,10 @@ public class JwtService {
 
     private JwtSecurityTokenHandler _handler = new JwtSecurityTokenHandler();
     
-    public async Task<string> GenerateToken(string username, int id) {
+    public string GenerateToken(string email, int id) {
         var claims = new List<Claim>() 
         {
-            new Claim("Name", username),
+            new Claim("Email", email),
             new Claim("Id", id.ToString())
         };
 

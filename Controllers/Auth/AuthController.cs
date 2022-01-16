@@ -6,9 +6,9 @@ using PizzaAPI.Services;
 [ApiController]
 [Route("[controller]")]
 public class AuthController : ControllerBase {
-    [HttpGet("test")]
-    public async Task<GenerateTokenModel> test([FromServices] JwtService service) {
-        var token = await service.GenerateToken("test", 2739243);
+    [HttpPost("register")]
+    public async Task<GenerateTokenModel> register([FromServices] JwtService service, string username, string password, string email) {
+        var token =  service.GenerateToken("test", 2739243);
 
         return new GenerateTokenModel {
             Result = "success",
