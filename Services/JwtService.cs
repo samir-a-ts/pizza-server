@@ -1,20 +1,30 @@
 namespace PizzaAPI.Services;
 
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
-public class JwtService {
+public class JwtService
+{
 
     private JwtHeader _header;
 
-    public JwtService(JwtHeader header) {
+    private TokenValidationParameters _params;
+
+    public JwtService(
+        JwtHeader header,
+        TokenValidationParameters parameters
+    )
+    {
         _header = header;
+        _params = parameters;
     }
 
     private JwtSecurityTokenHandler _handler = new JwtSecurityTokenHandler();
-    
-    public string GenerateToken(string email, int id) {
-        var claims = new List<Claim>() 
+
+    public string GenerateToken(string email, long id)
+    {
+        var claims = new List<Claim>()
         {
             new Claim("Email", email),
             new Claim("Id", id.ToString())
@@ -29,4 +39,26 @@ public class JwtService {
 
         return _handler.WriteToken(token);
     }
+
+    public bool CheckToken(string token)
+    {
+        try
+        {
+            _handler.ValidateToken(
+                token,
+                _params,
+                    out SecurityToken validatedToken
+                );
+
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    // public IDictionary<string, dynamic> ParseToken(string token) {
+
+    // }
 }

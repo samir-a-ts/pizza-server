@@ -26,14 +26,16 @@ public class MenuController : ControllerBase {
     public async Task<RequestResultBase> GetPizza([FromServices] MenuService service, int id) {
         var pizzasRequest = await service.GetPizzaFromId(id);
 
-        if (pizzasRequest == null) return new NotFoundModel {
+        if (pizzasRequest == null) return new ErrorResult {
             ErrorMessage = "Not found pizza with this ID!",
-            Result = "error"
+            Result = "error",
+            Code = 400
         };
 
         return new GetPizzaModel {
             Pizza = pizzasRequest,
             Result = "success",
+            Code = 200
         };
     }
 
@@ -41,14 +43,16 @@ public class MenuController : ControllerBase {
     public async Task<RequestResultBase> GetCombo([FromServices] MenuService service, int id) {
         var comboRequest = await service.GetComboFromId(id);
 
-        if (comboRequest == null) return new NotFoundModel {
+        if (comboRequest == null) return new ErrorResult {
             ErrorMessage = "Not found pizza with this ID!",
-            Result = "error"
+            Result = "error",
+            Code = 400
         };
 
         return new GetComboModel {
             Combo = comboRequest,
             Result = "success",
+            Code = 200
         };
     }
 

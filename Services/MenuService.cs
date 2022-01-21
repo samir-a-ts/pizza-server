@@ -25,8 +25,6 @@ public class MenuService
 
         var combosList = combos.ToList();
 
-        Console.WriteLine(combosList);
-
         result = result.Concat(combosList ?? new List<Combo>()).ToList();
 
         return result;
@@ -41,8 +39,6 @@ public class MenuService
         );
 
         var pizzaList = pizzas.ToList();
-
-        Console.WriteLine(pizzaList);
 
         result = result.Concat(pizzaList ?? new List<Pizza>()).ToList();
 

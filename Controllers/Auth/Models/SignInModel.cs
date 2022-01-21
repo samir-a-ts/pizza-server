@@ -1,7 +1,6 @@
 namespace PizzaAPI.Models;
 
-public class RegisterModel {
-    public string Username {get; set;}
+public class SignInModel {
     public string Password {get; set;}
     public string Email {get; set;}
 }

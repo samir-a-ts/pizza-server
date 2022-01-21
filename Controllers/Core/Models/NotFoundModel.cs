@@ -1,5 +1,5 @@
 namespace PizzaAPI.Controllers;
 
-public class NotFoundModel : RequestResultBase {
+public class ErrorResult : RequestResultBase {
     public string ErrorMessage {get; set;}
 }

@@ -2,22 +2,33 @@ using PizzaAPI.Injection;
 
 using Microsoft.Extensions.FileProviders;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 var builder = WebApplication.CreateBuilder(args);
 
 Injection.Init(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+// app.UseHttpsRedirection();
+app.UseRouting();
+
+app.UseAuthentication(); 
 app.UseAuthorization();
 
-app.UseAuthentication();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.UseStaticFiles(
-    new StaticFileOptions {
+    new StaticFileOptions
+    {
         FileProvider = new PhysicalFileProvider(
             Path.Combine(
                 builder.Environment.ContentRootPath, "Public"

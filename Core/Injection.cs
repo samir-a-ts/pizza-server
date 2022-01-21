@@ -7,12 +7,15 @@ using PizzaAPI.Services;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Microsoft.OpenApi.Models;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-public class Injection {
+public class Injection
+{
 
-    public static void Init(IServiceCollection Collection, IConfiguration Configuration) {
+    public static void Init(IServiceCollection Collection, IConfiguration Configuration)
+    {
         var mongoDBOptions = new MongoDBOptions();
 
         ConfigurationBinder.Bind(Configuration, MongoDBOptions.Position, mongoDBOptions);
@@ -24,7 +27,7 @@ public class Injection {
         var database = client.GetDatabase(mongoDBOptions.DatabaseName);
 
         var pizzaMenuCollection = database.GetCollection<Pizza>("pizza");
-        
+
         var comboMenuCollection = database.GetCollection<Combo>("combo");
 
         Collection.AddSingleton<MenuService>(
@@ -41,27 +44,21 @@ public class Injection {
             Encoding.ASCII.GetBytes(jwtSecret)
         );
 
-        Collection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(
-                options => {
-                    options.TokenValidationParameters = new TokenValidationParameters {
-                            // укзывает, будет ли валидироваться издатель при валидации токена
-                            ValidateIssuer = true,
-                            // строка, представляющая издателя
-                            ValidIssuer = jwtOptions.Issuer,
-                            // будет ли валидироваться потребитель токена
-                            ValidateAudience = true,
-                            // установка потребителя токена
-                            ValidAudience = jwtOptions.Audience,
-                            // будет ли валидироваться время существования
-                            ValidateLifetime = true,
-                            // установка ключа безопасности
-                            IssuerSigningKey = signingKey,
-                            // валидация ключа безопасности
-                            ValidateIssuerSigningKey = true
-                    };
-                }
-            );
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            // укзывает, будет ли валидироваться издатель при валидации токена
+            ValidateIssuer = true,
+            // строка, представляющая издателя
+            ValidIssuer = jwtOptions.Issuer,
+            // будет ли валидироваться потребитель токена
+            ValidateAudience = true,
+            // установка потребителя токена
+            ValidAudience = jwtOptions.Audience,
+            // установка ключа безопасности
+            IssuerSigningKey = signingKey,
+            // валидация ключа безопасности
+            ValidateIssuerSigningKey = true
+        };
 
         Collection.AddSingleton<JwtService>(
             new JwtService(
@@ -70,10 +67,33 @@ public class Injection {
                         signingKey,
                         SecurityAlgorithms.HmacSha512Signature
                     )
-                )
+                ),
+               tokenValidationParameters
             )
         );
 
-        Collection.AddControllersWithViews();
+        var userCollection = database.GetCollection<User>("users");
+
+        Collection.AddSingleton<AuthService>(
+            new AuthService(
+                userCollection
+            )
+        );
+
+        Collection.AddControllers();
+
+        Collection.AddAuthentication(
+            options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }
+        )
+            .AddJwtBearer(
+                options =>
+                {
+                    options.TokenValidationParameters = tokenValidationParameters;
+                }
+            );
     }
 }

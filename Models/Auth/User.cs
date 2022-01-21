@@ -10,7 +10,7 @@ public class User {
 
     [BsonElement("UserId")]
     [BsonRepresentation(BsonType.Int64)]
-    public Int64 Id {get; set;}
+    public Int64 UserId {get; set;}
 
     [BsonRepresentation(BsonType.String)]
     [BsonElement("Email")]
