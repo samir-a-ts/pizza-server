@@ -30,35 +30,26 @@ public class JwtService
             new Claim("Id", id.ToString())
         };
 
-        var payload = new JwtPayload(claims);
+        var tokenDescriptor = new SecurityTokenDescriptor
+			{
+				Subject = new ClaimsIdentity(claims),
+				SigningCredentials = _header.SigningCredentials,
+                Issuer = _params.ValidIssuer,
+                Audience = _params.ValidAudience,
+                EncryptingCredentials = _header.EncryptingCredentials,
+			};
 
-        var token = new JwtSecurityToken(
-            _header,
-            payload
+        var token = _handler.CreateToken(tokenDescriptor);
+
+		return _handler.WriteToken(token);
+    }
+
+    public JwtSecurityToken ParseToken(string token)
+    {
+        var parsed = _handler.ReadJwtToken(
+            token
         );
 
-        return _handler.WriteToken(token);
+        return parsed;
     }
-
-    public bool CheckToken(string token)
-    {
-        try
-        {
-            _handler.ValidateToken(
-                token,
-                _params,
-                    out SecurityToken validatedToken
-                );
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    // public IDictionary<string, dynamic> ParseToken(string token) {
-
-    // }
 }

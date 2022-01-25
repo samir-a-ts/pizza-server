@@ -1,6 +1,7 @@
 namespace PizzaAPI.Services;
 
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 using PizzaAPI.Models;
 
@@ -49,7 +50,7 @@ public class MenuService
     {
         var pizzaFilter = await PizzaCollection.FindAsync<Pizza>(
             new BsonDocumentFilterDefinition<Pizza>(
-                new MongoDB.Bson.BsonDocument(
+                new BsonDocument(
                     "ItemId", id
                 )
             )
@@ -62,7 +63,7 @@ public class MenuService
     {
         var comboFilter = await ComboCollection.FindAsync<Combo>(
             new BsonDocumentFilterDefinition<Combo>(
-                new MongoDB.Bson.BsonDocument(
+                new BsonDocument(
                     "ItemId", id
                 )
             )
@@ -70,5 +71,51 @@ public class MenuService
 
 
         return comboFilter.FirstOrDefault();
+    }
+
+    public async Task<IEnumerable<Pizza>> GetPizzasFromIds(IEnumerable<Int32> ids)
+    {
+        var filters = new List<BsonElement>();
+
+        foreach (var id in ids)
+        {
+            filters.Add(
+                new BsonElement(
+                    "ItemId", id
+                )
+            );
+        }
+
+        var pizzaFilter = await PizzaCollection.FindAsync<Pizza>(
+            new BsonDocumentFilterDefinition<Pizza>(
+                new BsonDocument(filters)
+            )
+        );
+
+        return pizzaFilter.ToList();
+    }
+
+        public async Task<IEnumerable<Combo>> GetCombosFromIds(IEnumerable<Int32> ids)
+    {
+        var filters = new List<BsonElement>();
+
+        foreach (var id in ids)
+        {
+            filters.Add(
+                new BsonElement(
+                    "ItemId", id
+                )
+            );
+        }
+
+
+        var comboFilter = await ComboCollection.FindAsync<Combo>(
+            new BsonDocumentFilterDefinition<Combo>(
+                new BsonDocument(filters)
+            )
+        );
+
+
+        return comboFilter.ToList();
     }
 }
