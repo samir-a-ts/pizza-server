@@ -22,12 +22,12 @@ public class JwtService
 
     private JwtSecurityTokenHandler _handler = new JwtSecurityTokenHandler();
 
-    public string GenerateToken(string email, long id)
+    public string GenerateToken(string email, string id)
     {
         var claims = new List<Claim>()
         {
             new Claim("Email", email),
-            new Claim("Id", id.ToString())
+            new Claim("Id", id)
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor

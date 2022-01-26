@@ -6,21 +6,17 @@ using MongoDB.Bson.Serialization.Attributes;
 public class User {
     [BsonRepresentation(BsonType.String)]
     [BsonElement("Username")]
-    public string Username {get; set;}
-
-    [BsonElement("UserId")]
-    [BsonRepresentation(BsonType.Int64)]
-    public Int64 UserId {get; set;}
+    public string? Username {get; set;}
 
     [BsonRepresentation(BsonType.String)]
     [BsonElement("Email")]
-    public string Email {get; set;}
+    public string? Email {get; set;}
 
     [BsonRepresentation(BsonType.String)]
     [BsonElement("Password")]
-    public string Password {get; set;}
+    public string? Password {get; set;}
 
     [BsonRepresentation(BsonType.ObjectId)]
     [BsonElement("_id")]
-    public string ObjectId { get; set; }
+    public string? ObjectId { get; set; }
 }

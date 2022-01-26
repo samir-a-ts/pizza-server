@@ -2,5 +2,5 @@ namespace PizzaAPI.Controllers;
 
 using PizzaAPI.Models;
 public class GetComboModel : RequestResultBase {
-    public Combo Combo {get; set;}
+    public Combo? Combo {get; set;}
 }

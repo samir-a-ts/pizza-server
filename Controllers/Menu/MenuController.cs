@@ -23,7 +23,7 @@ public class MenuController : ControllerBase {
     }
 
     [HttpGet("pizza/{id}")]
-    public async Task<RequestResultBase> GetPizza([FromServices] MenuService service, int id) {
+    public async Task<RequestResultBase> GetPizza([FromServices] MenuService service, string id) {
         var pizzasRequest = await service.GetPizzaFromId(id);
 
         if (pizzasRequest == null) return new ErrorResult {
@@ -40,7 +40,7 @@ public class MenuController : ControllerBase {
     }
 
     [HttpGet("combo/{id}")]
-    public async Task<RequestResultBase> GetCombo([FromServices] MenuService service, int id) {
+    public async Task<RequestResultBase> GetCombo([FromServices] MenuService service, string id) {
         var comboRequest = await service.GetComboFromId(id);
 
         if (comboRequest == null) return new ErrorResult {

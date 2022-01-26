@@ -8,5 +8,5 @@ public class Pizza : MenuItem {
     /// pizza's size.
     [BsonElement("PriceDictionary")]
     [BsonRepresentation(BsonType.Document)]
-    public SortedDictionary<string, int> PriceDictionary {get; set;}
+    public IDictionary<string, int>? PriceDictionary {get; set;}
 }

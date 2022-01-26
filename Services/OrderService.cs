@@ -33,10 +33,10 @@ public class OrderService
     {
         var collection = await _GetCollection(id);
 
-        return collection.Orders;
+        return collection.Orders ?? new List<Order>();
     }
 
-    public async void CreateOrdersCollection(long id)
+    public async void CreateOrdersCollection(string id)
     {
         await UserOrderCollection.InsertOneAsync(
             new UserOrderCollection
@@ -50,26 +50,6 @@ public class OrderService
     public async Task<Order> CreateOrder(int id, OrderModel order)
     {
         var collection = await _GetCollection(id);
-
-        Int32 price;
-
-        if (order.ComboId != null)
-        {
-            var combo = await MenuService.GetComboFromId(order.ComboId ?? default(int));
-
-            price = combo.Price;
-        }
-        else
-        {
-            var pizzas = await MenuService.GetPizzasFromIds(order.MenuItemsId);
-
-            price = 0;
-
-            // foreach (var pizza in pizzas)
-            // {
-            //     price += pizza.PriceDictionary
-            // }
-        }
 
         var orders = collection.Orders as List<Order>;
 
@@ -85,5 +65,7 @@ public class OrderService
         //     update
         // );
 
+
+        return default;
     }
 }

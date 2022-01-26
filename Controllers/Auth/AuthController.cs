@@ -14,7 +14,7 @@ public class AuthController : ControllerBase {
         [FromServices] OrderService orderService,
         [FromBody] RegisterModel data
     ) {
-        var user = await authService.findOne(data.Email);
+        var user = await authService.findOne(data.Email!);
 
         if (user != null)
             return new ErrorResult {
@@ -24,11 +24,15 @@ public class AuthController : ControllerBase {
             }; 
 
 
-        var userId = await authService.createOne(data.Username, data.Email, data.Password);
+        var userId = await authService.createOne(
+            data.Username!,
+            data.Email!,
+            data.Password!
+        );
 
         orderService.CreateOrdersCollection(userId);
 
-        var token = jwtService.GenerateToken(data.Email, userId); 
+        var token = jwtService.GenerateToken(data.Email!, userId); 
 
         return new GenerateTokenModel {
             Result = "success",
@@ -43,7 +47,7 @@ public class AuthController : ControllerBase {
         [FromServices] AuthService authService,
         [FromBody] SignInModel data
     ) {
-        var user = await authService.findOne(data.Email, data.Password);
+        var user = await authService.findOne(data.Email!, data.Password!);
 
         if (user == null)
             return new ErrorResult {
@@ -52,7 +56,7 @@ public class AuthController : ControllerBase {
                 ErrorMessage = "Wrong email or password."
             }; 
 
-        var token = jwtService.GenerateToken(data.Email, user.UserId); 
+        var token = jwtService.GenerateToken(data.Email!, user.ObjectId!); 
 
         return new GenerateTokenModel {
             Result = "success",

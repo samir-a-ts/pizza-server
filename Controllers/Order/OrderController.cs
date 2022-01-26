@@ -18,17 +18,67 @@ public class OrderController : ControllerBase {
         [FromServices] MenuService menuService,
         [FromBody] OrderModel model
     ) {
-        int count = model.MenuItemsId.Count();
 
-        if ((model.ComboId == null && count == 0) || (model.ComboId != null && count > 0)) {
+
+        if (model.Address!.Length == 0) {
             return new ErrorResult {
                 Code = 400,
                 Result = "wrong_parameters",
-                ErrorMessage = "Cannot order both combo and items from menu or none of them."
+                ErrorMessage = "Client address not provided."
             };
         }
 
-        DateTime dateFilter = DateTime.Parse(model.Date, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+        if (model.PhoneNumber!.Length == 0) {
+            return new ErrorResult {
+                Code = 400,
+                Result = "wrong_parameters",
+                ErrorMessage = "Client phone number not provided."
+            };
+        }
+
+        if (model.MenuItemsId!.Count() == 0) {
+            return new ErrorResult {
+                Code = 400,
+                Result = "wrong_parameters",
+                ErrorMessage = "Cannot create empty order."
+            };
+        }
+
+        var comboCount = 0;
+        var pizzaCount = 0;
+
+        foreach (var item in model.MenuItemsId!)
+        {
+            switch (item.ItemName)
+            {
+                case "pizza":
+                    pizzaCount++;
+                    break;
+                case "combo":
+                    comboCount++;
+                    break;
+                default:
+                    return new ErrorResult {
+                        Code = 400,
+                        Result = "wrong_parameters",
+                        ErrorMessage = "Unknown item type."
+                    };
+            }
+
+            if (comboCount > 0 && pizzaCount > 0) {
+                return new ErrorResult {
+                        Code = 400,
+                        Result = "wrong_parameters",
+                        ErrorMessage = "Cannot order both combos and pizzas."
+                    };
+            }
+        }
+
+        DateTime dateFilter = DateTime.Parse(
+            model.Date!,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal
+        );
 
         if (dateFilter <  DateTime.Now) {
             return new ErrorResult {
@@ -44,6 +94,6 @@ public class OrderController : ControllerBase {
 
         var id = parsed.Claims.ElementAt(1).Value;
 
-        
+        return default;
     }
 }
