@@ -62,7 +62,7 @@ public class AuthService {
              Password = password,
          };
 
-         user.ObjectId = ObjectIdGenerator.Instance.GenerateId("users", user).ToString()!;
+        user.ObjectId = ObjectIdGenerator.Instance.GenerateId("users", user).ToString()!;
 
         await UserCollection.InsertOneAsync(user);
      

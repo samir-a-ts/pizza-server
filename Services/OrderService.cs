@@ -4,6 +4,8 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using PizzaAPI.Models;
 
+using MongoDB.Bson.Serialization.IdGenerators;
+
 public class OrderService
 {
     private readonly IMongoCollection<UserOrderCollection> UserOrderCollection;
@@ -16,12 +18,12 @@ public class OrderService
         MenuService = menuService;
     }
 
-    private async Task<UserOrderCollection> _GetCollection(Int32 id)
+    private async Task<UserOrderCollection> _GetCollection(string id)
     {
         var collectionRequest = await UserOrderCollection.FindAsync<UserOrderCollection>(
             new BsonDocumentFilterDefinition<UserOrderCollection>(
                 new BsonDocument(
-                    "UserId", id
+                    "UserId", new ObjectId(id)
                 )
             )
         );
@@ -29,7 +31,7 @@ public class OrderService
         return collectionRequest.FirstOrDefault();
     }
 
-    public async Task<IEnumerable<Order>> GetOrders(Int32 id)
+    public async Task<IEnumerable<Order>> GetOrders(string id)
     {
         var collection = await _GetCollection(id);
 
@@ -38,34 +40,52 @@ public class OrderService
 
     public async void CreateOrdersCollection(string id)
     {
-        await UserOrderCollection.InsertOneAsync(
-            new UserOrderCollection
+        var collection = new UserOrderCollection
             {
                 UserId = id,
-                Orders = new List<Order>()
-            }
+                Orders = new List<Order>(),
+
+            };
+
+        collection.ObjectId = ObjectIdGenerator.Instance.GenerateId("orders", collection).ToString()!;
+
+        await UserOrderCollection.InsertOneAsync(
+            collection
         );
     }
 
-    public async Task<Order> CreateOrder(int id, OrderModel order)
+    public async Task<Order> CreateOrder(string id, OrderModel model) 
     {
         var collection = await _GetCollection(id);
 
         var orders = collection.Orders as List<Order>;
 
-        // var update = Builders<UserOrderCollection>.Update
-        //     .Set(p => collection.Orders, orders.Add(order));
+        var order = new Order {
+            Address = model.Address,
+            Date = model.Date!,
+            Time = model.Time!,
+            Description = model.Description,
+            MenuItemsId = model.MenuItemsId,
+            PhoneNumber = model.PhoneNumber
+        };
 
-        // await UserOrderCollection.UpdateOneAsync(
-        //     new BsonDocumentFilterDefinition<UserOrderCollection>(
-        //         new  BsonDocument(
-        //             "UserId", id
-        //         )
-        //     ),
-        //     update
-        // );
+        order.ObjectId = ObjectIdGenerator.Instance.GenerateId("orders", order).ToString()!;
 
+        orders!.Add(order);
 
-        return default;
+        await UserOrderCollection.ReplaceOneAsync(
+            new BsonDocumentFilterDefinition<UserOrderCollection>(
+                new  BsonDocument(
+                    "UserId", new ObjectId(id)
+                )
+            ),
+            new UserOrderCollection {
+                ObjectId = collection.ObjectId,
+                Orders = orders,
+                UserId = collection.UserId,
+            }
+        );
+
+        return order;
     }
 }

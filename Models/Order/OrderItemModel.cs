@@ -4,14 +4,10 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 public class OrderItemModel {
-
-    [BsonRepresentation(BsonType.ObjectId)]
-    [BsonElement("_id")]
-    public string? ObjectId { get; set; }
     
     [BsonElement("ItemId")]
-    [BsonRepresentation(BsonType.Int32)]
-    public Int32 ItemId {get; set;}
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? ItemId {get; set;}
 
     [BsonElement("ItemName")]
     [BsonRepresentation(BsonType.String)]

@@ -10,10 +10,9 @@ public class UserOrderCollection
     public string? ObjectId { get; set; }
 
     [BsonElement("UserId")]
-    [BsonRepresentation(BsonType.String)]
+    [BsonRepresentation(BsonType.ObjectId)]
     public string? UserId { get; set; }
 
-    [BsonRepresentation(BsonType.Array)]
     [BsonElement("Orders")]
     public IEnumerable<Order>? Orders { get; set; }
 }

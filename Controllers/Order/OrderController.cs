@@ -13,9 +13,9 @@ using System.Globalization;
 public class OrderController : ControllerBase {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpGet]
-    public RequestResultBase order(
+    public async Task<RequestResultBase> order(
         [FromServices] JwtService jwtService,
-        [FromServices] MenuService menuService,
+        [FromServices] OrderService orderService,
         [FromBody] OrderModel model
     ) {
 
@@ -72,12 +72,20 @@ public class OrderController : ControllerBase {
                         ErrorMessage = "Cannot order both combos and pizzas."
                     };
             }
+
+            if (comboCount > 1) {
+                return new ErrorResult {
+                        Code = 400,
+                        Result = "wrong_parameters",
+                        ErrorMessage = "Cannot order a bunch of combos."
+                    };
+            }
         }
 
-        DateTime dateFilter = DateTime.Parse(
+        var dateFilter = DateTime.ParseExact(
             model.Date!,
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.AssumeUniversal
+            "dd/MM/yyyy",
+            CultureInfo.InvariantCulture
         );
 
         if (dateFilter <  DateTime.Now) {
@@ -94,6 +102,13 @@ public class OrderController : ControllerBase {
 
         var id = parsed.Claims.ElementAt(1).Value;
 
-        return default;
+
+        var result = await orderService.CreateOrder(id, model);
+
+        return new OrderSuccessModel {
+            Code = 200,
+            Order = result,
+            Result = "success"
+        };
     }
 }

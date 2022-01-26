@@ -14,7 +14,7 @@ public class AuthController : ControllerBase {
         [FromServices] OrderService orderService,
         [FromBody] RegisterModel data
     ) {
-        var user = await authService.findOne(data.Email!);
+        var user = await authService.findByEmail(data.Email!);
 
         if (user != null)
             return new ErrorResult {

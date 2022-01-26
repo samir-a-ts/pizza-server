@@ -29,8 +29,10 @@ public class Injection
 
         var comboMenuCollection = database.GetCollection<Combo>("combo");
 
+        var menuService = new MenuService(pizzaMenuCollection, comboMenuCollection);
+
         Collection.AddSingleton<MenuService>(
-            new MenuService(pizzaMenuCollection, comboMenuCollection)
+            menuService
         );
 
         var jwtSecret = Configuration["Jwt:Secret"];
@@ -76,6 +78,15 @@ public class Injection
         Collection.AddSingleton<AuthService>(
             new AuthService(
                 userCollection
+            )
+        );
+
+        var ordersCollection = database.GetCollection<UserOrderCollection>("orders");
+
+        Collection.AddSingleton<OrderService>(
+            new OrderService(
+                ordersCollection,
+                menuService
             )
         );
 

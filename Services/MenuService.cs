@@ -56,8 +56,6 @@ public class MenuService
             )
         );
 
-        if (!pizzaFilter.Any()) return null;
-
         return pizzaFilter.FirstOrDefault();
     }
 
@@ -71,8 +69,6 @@ public class MenuService
             )
         );
 
-
-        if (!comboFilter.Any()) return null;
 
         return comboFilter.FirstOrDefault();
     }
