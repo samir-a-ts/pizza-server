@@ -3,6 +3,7 @@ namespace PizzaAPI.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
+
 public class Order
 {
     [BsonRepresentation(BsonType.ObjectId)]
@@ -30,5 +31,6 @@ public class Order
     public string? Description { get; set; }
 
     [BsonElement("Items")]
-    public IEnumerable<OrderItemModel>? MenuItemsId {get; set;}
+    public IEnumerable<BsonDocument>? MenuItemsId {get; set;}
 }
+

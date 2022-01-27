@@ -1,7 +1,9 @@
 namespace PizzaAPI.Models;
 
+using System.Text.Json;
+
 public class OrderModel {
-    public IEnumerable<OrderItemModel>? MenuItemsId {get; set;}
+    public JsonElement? MenuItemsId {get; set;}
 
     public string? Date { get; set; }
 
@@ -12,8 +14,4 @@ public class OrderModel {
     public string? PhoneNumber { get; set; }
 
     public string? Description { get; set; }
-
-    public IEnumerable<PizzaItemModel> pizzas = new List<PizzaItemModel>();
-
-    public IEnumerable<ComboItemModel> combos = new List<ComboItemModel>();
 }

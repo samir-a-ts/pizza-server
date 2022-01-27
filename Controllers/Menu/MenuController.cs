@@ -18,7 +18,8 @@ public class MenuController : ControllerBase {
         return new GetMenuModel {
             Pizzas = pizzas,
             Combos = combos,
-            Result = "success"
+            Result = "success",
+            Code = 200,
         };
     }
 

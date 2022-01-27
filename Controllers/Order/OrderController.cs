@@ -36,7 +36,9 @@ public class OrderController : ControllerBase {
             };
         }
 
-        if (model.MenuItemsId!.Count() == 0) {
+        var items = model.MenuItemsId!.Value.EnumerateArray();
+
+        if (items.Count() == 0) {
             return new ErrorResult {
                 Code = 400,
                 Result = "wrong_parameters",
@@ -47,9 +49,9 @@ public class OrderController : ControllerBase {
         var comboCount = 0;
         var pizzaCount = 0;
 
-        foreach (var item in model.MenuItemsId!)
+        foreach (var item in items)
         {
-            switch (item.ItemName)
+            switch (item.GetProperty("itemName").ToString())
             {
                 case "pizza":
                     pizzaCount++;
@@ -101,7 +103,6 @@ public class OrderController : ControllerBase {
         var parsed = jwtService.ParseToken(token);
 
         var id = parsed.Claims.ElementAt(1).Value;
-
 
         var result = await orderService.CreateOrder(id, model);
 

@@ -3,6 +3,7 @@ namespace PizzaAPI.Services;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using PizzaAPI.Models;
+using System.Text.Json;
 
 using MongoDB.Bson.Serialization.IdGenerators;
 
@@ -60,12 +61,32 @@ public class OrderService
 
         var orders = collection.Orders as List<Order>;
 
+        var menuItems = new List<OrderItemModel>();
+
+        var list = new List<BsonDocument>();
+
+        foreach (var item in model.MenuItemsId!.Value.EnumerateArray())
+        {
+            var document = new BsonDocument();
+
+            foreach (var key in item.EnumerateObject())
+            {
+                var property = item.GetProperty(key.Name);
+
+                document[key.Name] = new BsonString(property.ToString());
+            }
+
+            Console.WriteLine(document);
+
+            list.Add(document);
+        }
+
         var order = new Order {
             Address = model.Address,
             Date = model.Date!,
             Time = model.Time!,
             Description = model.Description,
-            MenuItemsId = model.MenuItemsId,
+            MenuItemsId = list,
             PhoneNumber = model.PhoneNumber
         };
 
