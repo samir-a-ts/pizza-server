@@ -8,9 +8,6 @@ public class User {
     [BsonElement("Username")]
     public string Username {get; set;}
 
-    [BsonElement("UserId")]
-    [BsonRepresentation(BsonType.Int64)]
-    public Int64 UserId {get; set;}
 
     [BsonRepresentation(BsonType.String)]
     [BsonElement("Email")]

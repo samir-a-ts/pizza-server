@@ -10,8 +10,8 @@ public class UserOrderCollection
     public string ObjectId { get; set; }
 
     [BsonElement("UserId")]
-    [BsonRepresentation(BsonType.Int32)]
-    public long UserId { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string UserId { get; set; }
 
     [BsonRepresentation(BsonType.Array)]
     [BsonElement("Orders")]

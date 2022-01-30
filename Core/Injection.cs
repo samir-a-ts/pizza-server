@@ -56,7 +56,8 @@ public class Injection
             // установка ключа безопасности
             IssuerSigningKey = signingKey,
             // валидация ключа безопасности
-            ValidateIssuerSigningKey = true
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true
         };
 
         Collection.AddSingleton<JwtService>(
@@ -67,7 +68,8 @@ public class Injection
                         SecurityAlgorithms.HmacSha512Signature
                     )
                 ),
-               tokenValidationParameters
+               tokenValidationParameters,
+               jwtOptions
             )
         );
 

@@ -55,16 +55,10 @@ public class AuthService {
         return userFilter.FirstOrDefault();
      }
 
-     public async Task<long> createOne(string username, string email, string password) {
-         var id = await UserCollection.EstimatedDocumentCountAsync();
-
-         Console.WriteLine(id);
-
-         id += 1;
+     public async Task<string> createOne(string username, string email, string password) {
 
          var user = new User {
              Email = email,
-             UserId = id,
              Username = username,
              Password = password,
          };
@@ -73,7 +67,7 @@ public class AuthService {
 
         await UserCollection.InsertOneAsync(user);
      
-        return id;
+        return user.ObjectId;
      } 
 
 }

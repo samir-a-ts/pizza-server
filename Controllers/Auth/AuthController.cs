@@ -18,7 +18,6 @@ public class AuthController : ControllerBase {
 
         if (user != null)
             return new ErrorResult {
-                Result = "error",
                 Code = 400,
                 ErrorMessage = "This email already used."
             }; 
@@ -28,11 +27,11 @@ public class AuthController : ControllerBase {
 
         orderService.CreateOrdersCollection(userId);
 
-        var token = jwtService.GenerateToken(data.Email, userId); 
+        var (token, refreshToken) = jwtService.GenerateToken(data.Email!, userId); 
 
         return new GenerateTokenModel {
-            Result = "success",
             Token = token,
+            RefreshToken = refreshToken,
             Code = 200
         };
     }
@@ -47,17 +46,36 @@ public class AuthController : ControllerBase {
 
         if (user == null)
             return new ErrorResult {
-                Result = "error",
                 Code = 400,
                 ErrorMessage = "Wrong email or password."
             }; 
 
-        var token = jwtService.GenerateToken(data.Email, user.UserId); 
+        var (token, refreshToken) = jwtService.GenerateToken(data.Email!, user.ObjectId!); 
 
         return new GenerateTokenModel {
-            Result = "success",
             Token = token,
+            RefreshToken = refreshToken,
             Code = 200
         };
+    }
+
+    [HttpPost("refreshToken")]
+    public RequestResultBase refreshToken(
+        [FromServices] JwtService jwtService,
+        [FromBody] TokenRefreshModel data
+    ) {
+        if (jwtService.ValidateToken(data.RefreshToken!)) {
+            var refreshedToken = jwtService.RefreshToken(data.RefreshToken!);
+
+            return new RefreshedTokenModel {
+                Code = 200,
+                Token = refreshedToken
+            };
+        } else {
+            return new ErrorResult {
+                Code = 400,
+                ErrorMessage = "Invalid refresh token."
+            }; 
+        }     
     }
 }
