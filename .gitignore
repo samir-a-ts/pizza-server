@@ -1,2 +1,4 @@
-MongoDB.bat
-bin/
+/MongoDB.bat
+/bin/
+/obj/
+/.vscode/

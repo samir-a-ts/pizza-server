@@ -14,11 +14,11 @@ public class AuthService {
          UserCollection = userCollection;
      }
 
-     public async Task<User?> findOne(Int16 id) {
+     public async Task<User?> findOne(string id) {
          var userFilter = await UserCollection.FindAsync<User>(
             new BsonDocumentFilterDefinition<User>(
                 new MongoDB.Bson.BsonDocument(
-                    "UserId", id
+                    "_id", new ObjectId(id)
                 )
             )
         );
@@ -41,7 +41,7 @@ public class AuthService {
         return userFilter.FirstOrDefault();
      }
 
-     public async Task<User?> findOne(string email) {
+     public async Task<User?> findByEmail(string email) {
         var userFilter = await UserCollection.FindAsync<User>(
             new BsonDocumentFilterDefinition<User>(
                 new BsonDocument(
@@ -56,14 +56,13 @@ public class AuthService {
      }
 
      public async Task<string> createOne(string username, string email, string password) {
-
          var user = new User {
              Email = email,
              Username = username,
              Password = password,
          };
 
-         user.ObjectId = ObjectIdGenerator.Instance.GenerateId("users", user).ToString()!;
+        user.ObjectId = ObjectIdGenerator.Instance.GenerateId("users", user).ToString()!;
 
         await UserCollection.InsertOneAsync(user);
      

@@ -8,23 +8,20 @@ public class MenuItem
     /// Current name of that pizza.
     [BsonRepresentation(BsonType.ObjectId)]
     [BsonElement("_id")]
-    public string ObjectId { get; set; }
+    public string? ObjectId { get; set; }
 
-    [BsonElement("ItemId")]
-    [BsonRepresentation(BsonType.Int32)]
-    public Int32 ItemId { get; set; }
 
     [BsonRepresentation(BsonType.String)]
     [BsonElement("Name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// URL for pizza image.
     [BsonRepresentation(BsonType.String)]
     [BsonElement("ImageUrl")]
-    public string ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
 
     /// Pizza description.
     [BsonElement("Description")]
     [BsonRepresentation(BsonType.String)]
-    public string Description;
+    public string? Description;
 }

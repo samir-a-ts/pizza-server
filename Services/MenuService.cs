@@ -46,12 +46,12 @@ public class MenuService
         return result;
     }
 
-    public async Task<Pizza?> GetPizzaFromId(int id)
+    public async Task<Pizza?> GetPizzaFromId(string id)
     {
         var pizzaFilter = await PizzaCollection.FindAsync<Pizza>(
             new BsonDocumentFilterDefinition<Pizza>(
                 new BsonDocument(
-                    "ItemId", id
+                     "_id", new ObjectId(id)
                 )
             )
         );
@@ -59,12 +59,12 @@ public class MenuService
         return pizzaFilter.FirstOrDefault();
     }
 
-    public async Task<Combo?> GetComboFromId(int id)
+    public async Task<Combo?> GetComboFromId(string id)
     {
         var comboFilter = await ComboCollection.FindAsync<Combo>(
             new BsonDocumentFilterDefinition<Combo>(
                 new BsonDocument(
-                    "ItemId", id
+                    "_id", new ObjectId(id)
                 )
             )
         );
@@ -73,7 +73,7 @@ public class MenuService
         return comboFilter.FirstOrDefault();
     }
 
-    public async Task<IEnumerable<Pizza>> GetPizzasFromIds(IEnumerable<Int32> ids)
+    public async Task<IEnumerable<Pizza>> GetPizzasFromIds(IEnumerable<string> ids)
     {
         var filters = new List<BsonElement>();
 
@@ -81,7 +81,7 @@ public class MenuService
         {
             filters.Add(
                 new BsonElement(
-                    "ItemId", id
+                    "_id", id
                 )
             );
         }
@@ -103,7 +103,7 @@ public class MenuService
         {
             filters.Add(
                 new BsonElement(
-                    "ItemId", id
+                    "_id", id
                 )
             );
         }

@@ -14,7 +14,7 @@ public class AuthController : ControllerBase {
         [FromServices] OrderService orderService,
         [FromBody] RegisterModel data
     ) {
-        var user = await authService.findOne(data.Email);
+        var user = await authService.findByEmail(data.Email!);
 
         if (user != null)
             return new ErrorResult {
@@ -23,7 +23,11 @@ public class AuthController : ControllerBase {
             }; 
 
 
-        var userId = await authService.createOne(data.Username, data.Email, data.Password);
+        var userId = await authService.createOne(
+            data.Username!,
+            data.Email!,
+            data.Password!
+        );
 
         orderService.CreateOrdersCollection(userId);
 
@@ -42,7 +46,7 @@ public class AuthController : ControllerBase {
         [FromServices] AuthService authService,
         [FromBody] SignInModel data
     ) {
-        var user = await authService.findOne(data.Email, data.Password);
+        var user = await authService.findOne(data.Email!, data.Password!);
 
         if (user == null)
             return new ErrorResult {
