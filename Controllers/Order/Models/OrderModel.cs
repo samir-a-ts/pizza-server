@@ -7,8 +7,6 @@ public class OrderModel {
 
     public string? Date { get; set; }
 
-    public string? Time { get; set; }
-
     public string? Address { get; set; }
 
     public string? PhoneNumber { get; set; }

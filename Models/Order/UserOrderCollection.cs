@@ -14,5 +14,5 @@ public class UserOrderCollection
     public string? UserId { get; set; }
 
     [BsonElement("Orders")]
-    public IEnumerable<Order>? Orders { get; set; }
+    public IEnumerable<OrderDocument>? Orders { get; set; }
 }

@@ -18,7 +18,6 @@ public class MenuController : ControllerBase {
         return new GetMenuModel {
             Pizzas = pizzas,
             Combos = combos,
-            Result = "success",
             Code = 200,
         };
     }
@@ -29,13 +28,11 @@ public class MenuController : ControllerBase {
 
         if (pizzasRequest == null) return new ErrorResult {
             ErrorMessage = "Not found pizza with this ID!",
-            Result = "error",
             Code = 400
         };
 
         return new GetPizzaModel {
             Pizza = pizzasRequest,
-            Result = "success",
             Code = 200
         };
     }
@@ -46,13 +43,11 @@ public class MenuController : ControllerBase {
 
         if (comboRequest == null) return new ErrorResult {
             ErrorMessage = "Not found pizza with this ID!",
-            Result = "error",
             Code = 400
         };
 
         return new GetComboModel {
             Combo = comboRequest,
-            Result = "success",
             Code = 200
         };
     }

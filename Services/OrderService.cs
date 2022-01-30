@@ -32,11 +32,11 @@ public class OrderService
         return collectionRequest.FirstOrDefault();
     }
 
-    public async Task<IEnumerable<Order>> GetOrders(string id)
+    public async Task<IEnumerable<OrderDocument>> GetOrders(string id)
     {
         var collection = await _GetCollection(id);
 
-        return collection.Orders ?? new List<Order>();
+        return collection.Orders ?? new List<OrderDocument>();
     }
 
     public async void CreateOrdersCollection(string id)
@@ -44,7 +44,7 @@ public class OrderService
         var collection = new UserOrderCollection
             {
                 UserId = id,
-                Orders = new List<Order>(),
+                Orders = new List<OrderDocument>(),
 
             };
 
@@ -59,7 +59,7 @@ public class OrderService
     {
         var collection = await _GetCollection(id);
 
-        var orders = collection.Orders as List<Order>;
+        var orders = collection.Orders as List<OrderDocument>;
 
         var menuItems = new List<OrderItemModel>();
 
@@ -76,15 +76,12 @@ public class OrderService
                 document[key.Name] = new BsonString(property.ToString());
             }
 
-            Console.WriteLine(document);
-
             list.Add(document);
         }
 
-        var order = new Order {
+        var order = new OrderDocument {
             Address = model.Address,
             Date = model.Date!,
-            Time = model.Time!,
             Description = model.Description,
             MenuItemsId = list,
             PhoneNumber = model.PhoneNumber
@@ -107,6 +104,13 @@ public class OrderService
             }
         );
 
-        return order;
+        return new Order {
+            Address = model.Address,
+            Date = model.Date!,
+            Description = model.Description,
+            MenuItemsId = model.MenuItemsId,
+            ObjectId = order.ObjectId,
+            PhoneNumber = model.PhoneNumber
+        };
     }
 }
