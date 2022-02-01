@@ -6,12 +6,58 @@ using PizzaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text.Json;
+using MongoDB.Bson;
+using Newtonsoft.Json;
 
 [ApiController]
 [Route("[controller]")]
 public class OrderController : ControllerBase {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [HttpGet]
+    [HttpGet("history")]
+    public async Task<RequestResultBase> getOrderHistory(
+        [FromServices] JwtService jwtService,
+        [FromServices] OrderService orderService
+    ) {
+        var id = _getUserId(jwtService);
+
+        var ordersDocuments = await orderService.GetOrders(id);
+
+        var ordersList = new List<Order>();
+
+        foreach (var item in ordersDocuments)
+        {
+            var elements = new List<JsonElement>();
+
+            foreach (var document in item.MenuItemsId!)
+            {
+                var dotNetObj = BsonTypeMapper.MapToDotNetValue(document);
+
+                var element = JsonConvert.SerializeObject(dotNetObj);
+
+                elements.Add(JsonDocument.Parse(element).RootElement);
+            }
+
+            ordersList.Add(
+                new Order {
+                    Address = item.Address,
+                    Date = item.Date,
+                    Description = item.Description,
+                    ObjectId = item.ObjectId,
+                    PhoneNumber = item.PhoneNumber,
+                    MenuItemsId = JsonDocument.Parse(elements.ToJson()).RootElement
+                }
+            );
+        }
+
+        return new OrderHistoryResult {
+            Code = 200,
+            orders = ordersList, 
+        };
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost]
     public async Task<RequestResultBase> order(
         [FromServices] JwtService jwtService,
         [FromServices] OrderService orderService,
@@ -137,11 +183,7 @@ public class OrderController : ControllerBase {
             };
         }
 
-        var token = Request.Headers["Authorization"].ToString().Split(' ')[1];
-
-        var parsed = jwtService.ParseToken(token);
-
-        var id = parsed.Claims.ElementAt(1).Value;
+        var id = _getUserId(jwtService);
 
         var result = await orderService.CreateOrder(id, model);
 
@@ -149,5 +191,13 @@ public class OrderController : ControllerBase {
             Code = 200,
             Order = result,
         };
+    }
+
+    private string _getUserId(JwtService jwtService) {
+        var token = Request.Headers["Authorization"].ToString().Split(' ')[1];
+
+        var parsed = jwtService.ParseToken(token);
+
+        return parsed.Claims.ElementAt(1).Value;
     }
 }

@@ -19,6 +19,8 @@ public class Injection
 
         ConfigurationBinder.Bind(Configuration, MongoDBOptions.Position, mongoDBOptions);
 
+        mongoDBOptions.Url = mongoDBOptions.Url.Replace("{password}", Configuration["MongoDB:Pass"]);
+
         var builder = new MongoDB.Driver.MongoUrlBuilder(mongoDBOptions.Url);
 
         var client = new MongoDB.Driver.MongoClient(builder.ToMongoUrl());
