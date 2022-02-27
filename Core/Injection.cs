@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
+using MongoDB.Driver;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 public class Injection
@@ -21,9 +23,9 @@ public class Injection
 
         mongoDBOptions.Url = mongoDBOptions.Url.Replace("{password}", Configuration["MongoDB:Pass"]);
 
-        var builder = new MongoDB.Driver.MongoUrlBuilder(mongoDBOptions.Url);
+        var builder = new MongoUrlBuilder(mongoDBOptions.Url);
 
-        var client = new MongoDB.Driver.MongoClient(builder.ToMongoUrl());
+        var client = new MongoClient(builder.ToMongoUrl());
 
         var database = client.GetDatabase(mongoDBOptions.DatabaseName);
 

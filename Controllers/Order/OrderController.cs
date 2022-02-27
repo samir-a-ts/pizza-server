@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text.Json;
 using MongoDB.Bson;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 [ApiController]
 [Route("[controller]")]
@@ -27,15 +28,13 @@ public class OrderController : ControllerBase {
 
         foreach (var item in ordersDocuments)
         {
-            var elements = new List<JsonElement>();
+            var elements = new List<Object>();
 
             foreach (var document in item.MenuItemsId!)
             {
                 var dotNetObj = BsonTypeMapper.MapToDotNetValue(document);
 
-                var element = JsonConvert.SerializeObject(dotNetObj);
-
-                elements.Add(JsonDocument.Parse(element).RootElement);
+                elements.Add(dotNetObj);
             }
 
             ordersList.Add(
@@ -45,7 +44,7 @@ public class OrderController : ControllerBase {
                     Description = item.Description,
                     ObjectId = item.ObjectId,
                     PhoneNumber = item.PhoneNumber,
-                    MenuItemsId = JsonDocument.Parse(elements.ToJson()).RootElement
+                    MenuItemsId = elements,
                 }
             );
         }

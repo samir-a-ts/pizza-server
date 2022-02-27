@@ -70,9 +70,7 @@ public class OrderService
 
             foreach (var key in item.EnumerateObject())
             {
-                var property = item.GetProperty(key.Name);
-
-                document[key.Name] = new BsonString(property.ToString());
+                document[key.Name] = new BsonString(key.Value.ToString());
             }
 
             list.Add(document);

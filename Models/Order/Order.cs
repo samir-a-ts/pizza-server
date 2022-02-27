@@ -14,6 +14,6 @@ public class Order
 
     public string? Description { get; set; }
 
-    public JsonElement? MenuItemsId {get; set;}
+    public Object? MenuItemsId {get; set;}
 }
 
