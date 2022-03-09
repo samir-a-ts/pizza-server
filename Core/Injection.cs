@@ -17,6 +17,8 @@ public class Injection
 
     public static void Init(IServiceCollection Collection, IConfiguration Configuration)
     {
+        Collection.AddSwaggerGen();
+
         var mongoDBOptions = new MongoDBOptions();
 
         ConfigurationBinder.Bind(Configuration, MongoDBOptions.Position, mongoDBOptions);

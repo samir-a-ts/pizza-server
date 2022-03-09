@@ -8,14 +8,11 @@ Injection.Init(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
-// app.UseHttpsRedirection();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
 
-// app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthentication(); 
