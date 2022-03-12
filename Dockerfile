@@ -24,7 +24,7 @@ RUN dotnet publish "PizzaAPI.csproj" -c Release -o /app/publish /p:UseAppHost=fa
 
 FROM base AS final
 WORKDIR /
-COPY . /app
+COPY /public /app/public
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "PizzaAPI.dll"]
