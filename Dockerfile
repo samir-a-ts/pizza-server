@@ -26,6 +26,5 @@ FROM base AS final
 WORKDIR /
 COPY . /app
 WORKDIR /app
-COPY /public /app/publish 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "PizzaAPI.dll"]
