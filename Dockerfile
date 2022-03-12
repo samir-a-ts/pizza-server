@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
 WORKDIR /app
 
+ENV ASPNETCORE_URLS=http://0.0.0.0:5000
 ENV MongoDBPass="wye8W4cYin4ZeAZt"
 ENV JwtSecret="JnininNIUn9usjniWMDIOEANUFI9i0om0oifn9oun0oiwnf9--[]][P]lP[K90jd0kP=SLLCVO;;-K0EKV90WML-=;"
 

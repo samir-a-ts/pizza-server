@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost
     .UseContentRoot(Directory.GetCurrentDirectory())
     .UseIISIntegration()
-    .UseUrls("http://0.0.0.0:" + builder.Configuration["PORT"]);
+    .UseUrls(builder.Configuration["ASPNETCORE_URLS"]);
 
 Injection.Init(builder.Services, builder.Configuration);
 
