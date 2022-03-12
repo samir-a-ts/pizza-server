@@ -5,7 +5,6 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost
-    .UseKestrel()
     .UseContentRoot(Directory.GetCurrentDirectory())
     .UseIISIntegration()
     .UseUrls("http://0.0.0.0:" + builder.Configuration["PORT"]);
