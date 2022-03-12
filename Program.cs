@@ -28,7 +28,7 @@ app.UseStaticFiles(
     {
         FileProvider = new PhysicalFileProvider(
             Path.Combine(
-                builder.Environment.ContentRootPath, "Public"
+                builder.Environment.ContentRootPath, "public"
             )
         ),
         RequestPath = "/static"

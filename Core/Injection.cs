@@ -23,7 +23,7 @@ public class Injection
 
         ConfigurationBinder.Bind(Configuration, MongoDBOptions.Position, mongoDBOptions);
 
-        mongoDBOptions.Url = mongoDBOptions.Url.Replace("{password}", Configuration["MongoDB:Pass"]);
+        mongoDBOptions.Url = mongoDBOptions.Url.Replace("{password}", Configuration["MongoDBPass"]);
 
         var builder = new MongoUrlBuilder(mongoDBOptions.Url);
 
@@ -41,7 +41,7 @@ public class Injection
             menuService
         );
 
-        var jwtSecret = Configuration["Jwt:Secret"];
+        var jwtSecret = Configuration["JwtSecret"];
 
         var jwtOptions = new JwtOptions();
 
