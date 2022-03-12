@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
+EXPOSE 5000
 WORKDIR /app
 
 ENV ASPNETCORE_URLS=http://0.0.0.0:5000
