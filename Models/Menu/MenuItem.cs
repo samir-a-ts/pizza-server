@@ -21,7 +21,7 @@ public class MenuItem
     public string? ImageUrl { get; set; }
 
     /// Pizza description.
-    [BsonElement("Description")]
     [BsonRepresentation(BsonType.String)]
-    public string? Description;
+    [BsonElement("Description")]
+    public string? Description {get; set;}
 }
